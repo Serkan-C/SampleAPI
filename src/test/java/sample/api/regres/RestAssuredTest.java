@@ -21,13 +21,16 @@ public class RestAssuredTest extends RegresTestBase {
                 .get("/api/users/2")
                 .then()
                 .statusCode(200)
-                .body("data.email", equalTo("janet.weaver@reqres.in"))
-        ;
+                .body("data.id", is(2)
+                        , "data.email", equalTo("janet.weaver@reqres.in")
+                        , "data.first_name", is("Janet")
+                        , "data.last_name", is("Weaver"));
 
 
     }
 
-    String createdID;
+    String createdID; // newly created ID to use it later. ex: for delete
+
     @DisplayName("Post Create ")
     @Test
     public void PostCreate() {
@@ -43,19 +46,18 @@ public class RestAssuredTest extends RegresTestBase {
                 .statusCode(201)
                 .extract().response();
         createdID = response.path("id");
-        System.out.println("User with"+ createdID+ "created");
+        System.out.println("User with" + createdID + "created");
 
 
     }
 
     @DisplayName("Delete recently created user")
     @Test
-    public void DeleteUser(){
+    public void DeleteUser() {
 
-        when().delete("/api/users/"+createdID)
+        when().delete("/api/users/" + createdID)
                 .then().statusCode(204);
-        System.out.println("user with "+createdID+" is deleted");
-
+        System.out.println("user with " + createdID + " is deleted");
 
 
     }
@@ -77,7 +79,7 @@ public class RestAssuredTest extends RegresTestBase {
 
     }
 
-
+    String tokenForUser; // save it to use it maybe later
     @DisplayName("Post Login using POJO")
     @Test
     public void PostLogin() {
@@ -86,12 +88,14 @@ public class RestAssuredTest extends RegresTestBase {
         userBody.setPassword("cityslicka");
 
 
-        given().contentType(ContentType.JSON)
+       Response response= given().contentType(ContentType.JSON)
                 .body(userBody)
                 .when()
                 .post("/api/login")
                 .then()
-                .spec(responseSpec);
+                .spec(responseSpec)
+               .extract().response();
+       tokenForUser=response.path("token");
 
     }
 
