@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.*;
 
 
 public class RestAssuredTestWithJunit extends RegresTestBase {
-    @DisplayName("Get Single User")
+    @DisplayName("Get Single User with Hamcrest Matchers")
     @Test
     public void singleUserTest() {
 
@@ -30,18 +30,18 @@ public class RestAssuredTestWithJunit extends RegresTestBase {
 
     }
 
-    @DisplayName("Get Single User with pathParam")
+    @DisplayName("Get Single User with pathParam and with Hamcrest Matchers ")
     @Test
     public void singleUserWithParamTest() {
-        Response response = given().accept(ContentType.JSON)
-                .and().pathParam("id",2)
+         given().accept(ContentType.JSON)
+                .and().pathParam("id", 2)
                 .when()
-                .get("/api/users/{id}");
-
-           //                   .body("data.id", is(2)
-           //             , "data.email", equalTo("janet.weaver@reqres.in")
-           //             , "data.first_name", is("Janet")
-           //             , "data.last_name", is("Weaver"));
+                .get("/api/users/{id}")
+                .then().statusCode(200)
+                .body("data.id", is(2)
+                        , "data.email", equalTo("janet.weaver@reqres.in")
+                        , "data.first_name", is("Janet")
+                        , "data.last_name", is("Weaver"));
 
 
     }
@@ -62,7 +62,7 @@ public class RestAssuredTestWithJunit extends RegresTestBase {
 
     String createdID; // newly created ID to use it later. ex: for delete
 
-    @DisplayName("Post Create ")
+    @DisplayName("Post Create using POJO")
     @Test
     public void PostCreate() {
         User userBodyCreate = new User();
@@ -93,7 +93,7 @@ public class RestAssuredTestWithJunit extends RegresTestBase {
 
     }
 
-    @DisplayName("Post Register ")
+    @DisplayName("Post Register using simply String")
     @Test
     public void PostRegister() {
         String userBody = "{\n" +
@@ -112,7 +112,7 @@ public class RestAssuredTestWithJunit extends RegresTestBase {
 
     String tokenForUser; // save it to use it maybe later
 
-    @DisplayName("Post Login using POJO")
+    @DisplayName("Post Login using POJO get token and save it to use it later")
     @Test
     public void PostLogin() {
         User userBody = new User();
