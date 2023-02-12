@@ -157,10 +157,22 @@ public class regresWithTestNG {
                 .and().pathParam("id", 2)
                 .when()
                 .get("/api/users/{id}");
-        Map<String,Object> userMap= response.body().as(Map.class);
-        System.out.println("userMap = " + userMap);
         response.prettyPrint();
-        System.out.println("userMap.get(\"data\").toString() = " + userMap.get("data").toString());
+        JsonPath jsonPath=response.jsonPath();
+      //  System.out.println(jsonPath.toString());
+        Map<String,Object> userMap= response.body().as(Map.class);
+       System.out.println("userMap = " + userMap);
+        System.out.println("=================");
+
+        System.out.println("response.data = " + response.body().path("data"));
+        System.out.println("userMap.get(\"data\") = " + userMap.get("data"));
+
+        System.out.println("=================");
+        System.out.println("response.support = " + response.body().path("support"));
+
+        System.out.println("userMap.get(\"support\") = " + userMap.get("support"));
+
+
 
 
     }

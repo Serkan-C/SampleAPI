@@ -1,6 +1,5 @@
-package sample.api.Utilities;
+package sample.api.utilities;
 
-import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -14,7 +13,7 @@ public class RegresTestBase {
     public static RequestSpecification userSpec;
     @BeforeAll
     public static void init() {
-        baseURI = "https://reqres.in";
+        baseURI = ConfigurationReader.getProperty("baseUri");
 
 
         userSpec =given()
