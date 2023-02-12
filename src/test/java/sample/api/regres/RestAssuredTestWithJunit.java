@@ -1,18 +1,19 @@
 package sample.api.regres;
 
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import sample.api.Utilities.ConfigurationReader;
 import sample.api.Utilities.RegresTestBase;
+import sample.api.pojo.ListUser;
 import sample.api.pojo.User;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 
-public class RestAssuredTest extends RegresTestBase {
+public class RestAssuredTestWithJunit extends RegresTestBase {
     @DisplayName("Get Single User")
     @Test
     public void singleUserTest() {
@@ -25,6 +26,36 @@ public class RestAssuredTest extends RegresTestBase {
                         , "data.email", equalTo("janet.weaver@reqres.in")
                         , "data.first_name", is("Janet")
                         , "data.last_name", is("Weaver"));
+
+
+    }
+
+    @DisplayName("Get Single User with pathParam")
+    @Test
+    public void singleUserWithParamTest() {
+        Response response = given().accept(ContentType.JSON)
+                .and().pathParam("id",2)
+                .when()
+                .get("/api/users/{id}");
+
+           //                   .body("data.id", is(2)
+           //             , "data.email", equalTo("janet.weaver@reqres.in")
+           //             , "data.first_name", is("Janet")
+           //             , "data.last_name", is("Weaver"));
+
+
+    }
+
+    @DisplayName("Get Single User with POJO and validation")
+    @Test
+    public void singleUserTestwithPOJO() {
+
+        Response response = given().accept(ContentType.JSON)
+                .when()
+                .get("/api/users/2");
+        response.prettyPrint();
+        ListUser listUser = response.as(ListUser.class);
+        System.out.println(listUser);
 
 
     }
@@ -80,6 +111,7 @@ public class RestAssuredTest extends RegresTestBase {
     }
 
     String tokenForUser; // save it to use it maybe later
+
     @DisplayName("Post Login using POJO")
     @Test
     public void PostLogin() {
@@ -88,15 +120,27 @@ public class RestAssuredTest extends RegresTestBase {
         userBody.setPassword("cityslicka");
 
 
-       Response response= given().contentType(ContentType.JSON)
+        Response response = given().contentType(ContentType.JSON)
                 .body(userBody)
                 .when()
                 .post("/api/login")
                 .then()
                 .spec(responseSpec)
-               .extract().response();
-       tokenForUser=response.path("token");
+                .extract().response();
+        tokenForUser = response.path("token");
 
     }
 
+
+    @DisplayName(" List All User ")
+    @Test
+    public void GetListUser() {
+
+        Response response = given().accept(ContentType.JSON)
+                .when().get("/api/users?page=2");
+        response.prettyPrint();
+        JsonPath jsonPath = response.jsonPath();
+        System.out.println(jsonPath);
+
+    }
 }

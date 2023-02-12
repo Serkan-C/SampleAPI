@@ -23,5 +23,7 @@ public class User {
     private String avatar;
     private String job;
     private String password;
+    private String url;
+    private String text;
 
 }

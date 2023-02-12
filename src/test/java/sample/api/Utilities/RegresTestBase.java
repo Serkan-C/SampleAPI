@@ -18,9 +18,7 @@ public class RegresTestBase {
 
 
         userSpec =given()
-                .accept(ContentType.JSON)
-                .and()
-                .auth().basic("eve.holt@reqres.in", "cityslicka");
+                .accept(ContentType.JSON);
 
         responseSpec = expect().statusCode(200)
                 .and()
